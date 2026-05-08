@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Feedback Hub — Connexion</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .auth-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 36px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+        .auth-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        .auth-brand img {
+            width: 38px;
+            height: 38px;
+        }
+        .auth-brand strong {
+            font-size: 1.15rem;
+        }
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin-bottom: 24px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .auth-tab {
+            padding: 10px;
+            border: none;
+            background: #fbfcfa;
+            color: var(--muted);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .auth-tab.active {
+            background: var(--green);
+            color: #fff;
+        }
+        .auth-form {
+            display: grid;
+            gap: 14px;
+        }
+        .auth-form label {
+            display: grid;
+            gap: 7px;
+            color: var(--muted);
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+        .auth-submit {
+            min-height: 48px;
+            border: none;
+            border-radius: 8px;
+            background: var(--green);
+            color: #fff;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .auth-submit:hover { opacity: 0.9; }
+        .auth-divider {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin: 8px 0 0;
+        }
+        .auth-divider a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .form-section { display: none; }
+        .form-section.active { display: contents; }
+        .auth-error {
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: var(--red-soft);
+            color: var(--red);
+            font-size: 0.88rem;
+            display: none;
+        }
+        .auth-error.show { display: block; }
+    </style>
+</head>
+<body>
+<div class="auth-layout">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <img src="/assets/feedback-mark.svg" alt="" aria-hidden="true">
+            <strong>Feedback Hub</strong>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLogin" type="button" onclick="switchTab('login')">Connexion</button>
+            <button class="auth-tab" id="tabRegister" type="button" onclick="switchTab('register')">Inscription</button>
+        </div>
+
+        <div id="authError" class="auth-error"></div>
+
+        <form class="auth-form" id="authForm" onsubmit="handleSubmit(event)">
+            <div class="form-section active" id="sectionLogin">
+                <label>
+                    Email
+                    <input type="email" name="email" required placeholder="nom@email.com" autocomplete="email">
+                </label>
+                <label>
+                    Mot de passe
+                    <input type="password" name="password" required placeholder="••••••••" autocomplete="current-password">
+                </label>
+            </div>
+
+            <div class="form-section" id="sectionRegister">
+                <label>
+                    Nom complet
+                    <input type="text" name="fullName" maxlength="120" placeholder="Votre nom">
+                </label>
+                <label>
+                    Email
+                    <input type="email" name="emailRegister" placeholder="nom@email.com" autocomplete="email">
+                </label>
+                <label>
+                    Mot de passe
+                    <input type="password" name="passwordRegister" placeholder="Min. 6 caractères" autocomplete="new-password">
+                </label>
+            </div>
+
+            <button class="auth-submit" type="submit" id="submitBtn">Se connecter</button>
+        </form>
+
+        <p class="auth-divider">
+            Vous voulez laisser un avis ?
+            <a href="/feedback.html">Saisie d'avis publique →</a>
+        </p>
+    </div>
+</div>
+
+<script>
+let currentTab = 'login';
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('sectionLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('sectionRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('submitBtn').textContent = tab === 'login' ? 'Se connecter' : "S'inscrire";
+    hideError();
+}
+
+function showError(msg) {
+    const el = document.getElementById('authError');
+    el.textContent = msg;
+    el.classList.add('show');
+}
+
+function hideError() {
+    document.getElementById('authError').classList.remove('show');
+}
+
+async function handleSubmit(event) {
+    event.preventDefault();
+    hideError();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    try {
+        if (currentTab === 'login') {
+            const email = event.target.email.value.trim();
+            const password = event.target.password.value;
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.detail || data.message || 'Identifiants invalides');
+            }
+            const data = await res.json();
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify({ id: data.id, fullName: data.fullName, email: data.email }));
+            window.location.href = '/index.html';
+        } else {
+            const fullName = event.target.fullName.value.trim();
+            const email = event.target.emailRegister.value.trim();
+            const password = event.target.passwordRegister.value;
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fullName, email, password })
+            });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.detail || data.message || "Erreur lors de l'inscription");
+            }
+            const data = await res.json();
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify({ id: data.id, fullName: data.fullName, email: data.email }));
+            window.location.href = '/index.html';
+        }
+    } catch (err) {
+        showError(err.message);
+        btn.disabled = false;
+        btn.textContent = currentTab === 'login' ? 'Se connecter' : "S'inscrire";
+    }
+}
+
+if (localStorage.getItem('token')) {
+    window.location.href = '/index.html';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Feedback Hub — Laisser un avis</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .feedback-layout {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+        .feedback-card {
+            width: 100%;
+            max-width: 520px;
+        }
+        .public-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        .public-brand img { width: 38px; height: 38px; }
+        .public-brand strong { font-size: 1.1rem; }
+        .public-brand a {
+            margin-left: auto;
+            font-size: 0.85rem;
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .public-panel {
+            padding: 32px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+        .public-panel h1 {
+            margin: 0 0 4px;
+            font-size: 1.5rem;
+        }
+        .public-panel .subtitle {
+            color: var(--muted);
+            font-size: 0.88rem;
+            margin: 0 0 24px;
+        }
+        .success-state {
+            display: none;
+            text-align: center;
+            padding: 40px 0;
+        }
+        .success-state.show { display: block; }
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+        .success-state h2 { margin: 0 0 8px; color: var(--green); }
+        .success-state p { color: var(--muted); margin: 0 0 20px; }
+        .success-state button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            background: var(--green);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="feedback-layout">
+    <div class="feedback-card">
+        <div class="public-brand">
+            <img src="/assets/feedback-mark.svg" alt="" aria-hidden="true">
+            <strong>Feedback Hub</strong>
+            <a href="/login.html">Espace admin →</a>
+        </div>
+
+        <div class="public-panel">
+            <h1>Laisser un avis</h1>
+            <p class="subtitle">Votre avis est anonyme et ne nécessite pas de compte.</p>
+
+            <div class="success-state" id="successState">
+                <div class="success-icon">✓</div>
+                <h2>Merci pour votre avis !</h2>
+                <p>Il sera examiné prochainement.</p>
+                <button onclick="resetForm()">Laisser un autre avis</button>
+            </div>
+
+            <form id="feedbackForm" class="feedback-form">
+                <label>
+                    Application
+                    <select id="applicationSelect" name="applicationClientId" required>
+                        <option value="">Chargement...</option>
+                    </select>
+                </label>
+
+                <label>
+                    Composant <span style="font-weight:400;color:var(--muted)">(optionnel)</span>
+                    <select id="componentSelect" name="componentId">
+                        <option value="">Général</option>
+                    </select>
+                </label>
+
+                <fieldset class="rating-field">
+                    <legend>Note</legend>
+                    <div class="rating-options">
+                        <input type="radio" id="rating5" name="rating" value="5" checked>
+                        <label for="rating5">5</label>
+                        <input type="radio" id="rating4" name="rating" value="4">
+                        <label for="rating4">4</label>
+                        <input type="radio" id="rating3" name="rating" value="3">
+                        <label for="rating3">3</label>
+                        <input type="radio" id="rating2" name="rating" value="2">
+                        <label for="rating2">2</label>
+                        <input type="radio" id="rating1" name="rating" value="1">
+                        <label for="rating1">1</label>
+                    </div>
+                </fieldset>
+
+                <div class="two-columns">
+                    <label>
+                        Nom <span style="font-weight:400">(optionnel)</span>
+                        <input id="authorName" name="authorName" maxlength="120" placeholder="Anonyme">
+                    </label>
+                    <label>
+                        Email <span style="font-weight:400">(optionnel)</span>
+                        <input id="authorEmail" name="authorEmail" type="email" maxlength="160" placeholder="nom@email.com">
+                    </label>
+                </div>
+
+                <label>
+                    Commentaire
+                    <textarea id="comment" name="comment" rows="5" maxlength="2000" required placeholder="Votre avis..."></textarea>
+                </label>
+
+                <button class="primary-button" type="submit" id="submitBtn">Envoyer mon avis</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/feedback.js"></script>
+</body>
+</html>

@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Feedback Hub</title>
     <link rel="stylesheet" href="/styles.css">
+    <style>
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-name {
+            font-size: 0.88rem;
+            color: var(--muted);
+        }
+        .logout-btn {
+            height: 36px;
+            padding: 0 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            color: var(--red);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .logout-btn:hover { background: var(--red-soft); }
+    </style>
 </head>
 <body>
 <header class="topbar">
@@ -12,68 +35,17 @@
         <img src="/assets/feedback-mark.svg" alt="" aria-hidden="true">
         <div>
             <strong>Feedback Hub</strong>
-            <span>Spring Boot</span>
+            <span>Tableau de bord</span>
         </div>
     </div>
-    <button class="icon-button" id="refreshButton" type="button" title="Actualiser" aria-label="Actualiser">↻</button>
+    <div class="user-pill">
+        <span class="user-name" id="userNameDisplay"></span>
+        <button class="icon-button" id="refreshButton" type="button" title="Actualiser" aria-label="Actualiser">↻</button>
+        <button class="logout-btn" id="logoutButton" type="button">Déconnexion</button>
+    </div>
 </header>
 
 <main class="layout">
-    <section class="panel feedback-panel">
-        <div class="panel-title">
-            <h1>Saisie d'avis</h1>
-            <span id="selectedApplicationName">Application</span>
-        </div>
-
-        <form id="feedbackForm" class="feedback-form">
-            <label>
-                Application
-                <select id="applicationSelect" name="applicationClientId" required></select>
-            </label>
-
-            <label>
-                Composant
-                <select id="componentSelect" name="componentId">
-                    <option value="">General</option>
-                </select>
-            </label>
-
-            <fieldset class="rating-field">
-                <legend>Note</legend>
-                <div class="rating-options" id="ratingOptions">
-                    <input type="radio" id="rating5" name="rating" value="5" checked>
-                    <label for="rating5">5</label>
-                    <input type="radio" id="rating4" name="rating" value="4">
-                    <label for="rating4">4</label>
-                    <input type="radio" id="rating3" name="rating" value="3">
-                    <label for="rating3">3</label>
-                    <input type="radio" id="rating2" name="rating" value="2">
-                    <label for="rating2">2</label>
-                    <input type="radio" id="rating1" name="rating" value="1">
-                    <label for="rating1">1</label>
-                </div>
-            </fieldset>
-
-            <div class="two-columns">
-                <label>
-                    Nom
-                    <input id="authorName" name="authorName" maxlength="120" placeholder="Anonyme">
-                </label>
-                <label>
-                    Email
-                    <input id="authorEmail" name="authorEmail" type="email" maxlength="160" placeholder="nom@email.com">
-                </label>
-            </div>
-
-            <label>
-                Commentaire
-                <textarea id="comment" name="comment" rows="7" maxlength="2000" required placeholder="Votre avis..."></textarea>
-            </label>
-
-            <button class="primary-button" type="submit">Envoyer</button>
-        </form>
-    </section>
-
     <section class="panel stats-panel">
         <div class="panel-title">
             <h2>Tableau de bord</h2>
@@ -90,7 +62,7 @@
                 <strong id="pendingCount">0</strong>
             </div>
             <div class="metric accent-red">
-                <span>Rejetes</span>
+                <span>Rejetés</span>
                 <strong id="rejectedCount">0</strong>
             </div>
         </div>
@@ -114,9 +86,15 @@
         </div>
     </section>
 
-    <section class="panel list-panel">
+    <section class="panel list-panel" style="grid-column: 1 / -1">
         <div class="panel-title">
-            <h2>Avis recents</h2>
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                <h2 style="margin:0">Avis récents</h2>
+                <label style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:0.86rem;font-weight:700;margin:0">
+                    Application
+                    <select id="applicationSelect" style="height:36px;padding:0 10px;font-size:0.86rem;border:1px solid var(--line);border-radius:8px;background:#fbfcfa;min-width:160px"></select>
+                </label>
+            </div>
             <span id="listCount">0</span>
         </div>
         <div class="feedback-list" id="feedbackList"></div>
@@ -124,7 +102,6 @@
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <script src="/app.js"></script>
 </body>
 </html>

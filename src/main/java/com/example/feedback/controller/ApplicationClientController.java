@@ -1,10 +1,7 @@
 package com.example.feedback.controller;
 
-import com.example.feedback.dto.ApplicationClientRequest;
-import com.example.feedback.dto.ApplicationClientResponse;
-import com.example.feedback.service.ApplicationClientService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.example.feedback.dto.ApplicationClientRequest;
+import com.example.feedback.dto.ApplicationClientResponse;
+import com.example.feedback.service.ApplicationClientService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -51,4 +53,10 @@ public class ApplicationClientController {
     public void delete(@PathVariable Long id) {
         applicationClientService.delete(id);
     }
+
+    @GetMapping("/public")
+    public List<ApplicationClientResponse> findAllPublic() {
+        return applicationClientService.findAllPublic();
+    }
 }
+
