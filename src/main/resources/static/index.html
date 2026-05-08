@@ -54,7 +54,7 @@
                 <label style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:0.86rem;font-weight:700;margin:0">
                     <select id="applicationSelect" style="height:36px;padding:0 10px;font-size:0.86rem;border:1px solid var(--line);border-radius:8px;background:#fbfcfa;min-width:160px"></select>
                 </label>
-                
+                <button id="qrBtn" type="button" title="Lien & QR Code" style="height:36px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:0.85rem;font-weight:700;cursor:pointer;color:var(--green)">Lien & QR</button>
             </div>
         </div>
 
@@ -102,6 +102,22 @@
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div id="qrModal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.45);align-items:center;justify-content:center">
+    <div style="background:var(--panel);border-radius:12px;padding:32px;max-width:420px;width:calc(100% - 48px);box-shadow:var(--shadow);position:relative">
+        <button id="qrModalClose" type="button" style="position:absolute;top:12px;right:14px;border:none;background:none;font-size:1.5rem;line-height:1;cursor:pointer;color:var(--muted)">×</button>
+        <h3 id="qrModalTitle" style="margin:0 0 4px;font-size:1.1rem"></h3>
+        <p style="margin:0 0 16px;font-size:0.86rem;color:var(--muted)">Partagez ce lien — les utilisateurs verront directement votre application.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+            <input id="qrLink" readonly style="flex:1;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fbfcfa;font-size:0.8rem;color:var(--ink)">
+            <button id="qrCopyBtn" type="button" style="height:38px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-weight:700;cursor:pointer;white-space:nowrap">Copier</button>
+        </div>
+        <div style="display:flex;justify-content:center">
+            <img id="qrImage" alt="QR Code" style="width:200px;height:200px;border:1px solid var(--line);border-radius:8px">
+        </div>
+    </div>
+</div>
+
 <script src="/app.js"></script>
 </body>
 </html>

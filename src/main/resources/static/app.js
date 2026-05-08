@@ -235,6 +235,32 @@ document.getElementById('componentForm').addEventListener("submit", async event 
     } catch (err) { showToast(err.message); }
 });
 
+document.getElementById('qrBtn').addEventListener('click', () => {
+    const app = state.applications.find(a => a.id === state.selectedApplicationId);
+    if (!app) { showToast("Sélectionnez une application"); return; }
+    const link = `${window.location.origin}/feedback.html?appId=${app.id}`;
+    document.getElementById('qrModalTitle').textContent = app.name;
+    document.getElementById('qrLink').value = link;
+    document.getElementById('qrImage').src =
+        `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
+    const modal = document.getElementById('qrModal');
+    modal.style.display = 'flex';
+});
+
+document.getElementById('qrModalClose').addEventListener('click', () => {
+    document.getElementById('qrModal').style.display = 'none';
+});
+
+document.getElementById('qrModal').addEventListener('click', event => {
+    if (event.target === event.currentTarget) event.currentTarget.style.display = 'none';
+});
+
+document.getElementById('qrCopyBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('qrLink').value)
+        .then(() => showToast('Lien copié !'))
+        .catch(() => showToast('Impossible de copier'));
+});
+
 elements.feedbackList.addEventListener("click", async event => {
     const button = event.target.closest("[data-status]");
     if (!button) return;

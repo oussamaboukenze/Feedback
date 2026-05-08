@@ -11,6 +11,7 @@ function showToast(msg) {
 }
 
 async function loadApplications() {
+    const lockedId = new URLSearchParams(window.location.search).get('appId');
     try {
         const res = await fetch('/api/applications/public');
         if (!res.ok) throw new Error();
@@ -22,7 +23,13 @@ async function loadApplications() {
         appSelect.innerHTML = apps.map(a =>
             `<option value="${a.id}">${a.name.replace(/</g,'&lt;')}</option>`
         ).join('');
-        loadComponents(apps[0].id);
+        if (lockedId && apps.some(a => String(a.id) === lockedId)) {
+            appSelect.value = lockedId;
+            appSelect.closest('label').style.display = 'none';
+            loadComponents(lockedId);
+        } else {
+            loadComponents(apps[0].id);
+        }
     } catch {
         appSelect.innerHTML = '<option value="">Erreur de chargement</option>';
     }
