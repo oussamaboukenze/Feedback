@@ -135,15 +135,15 @@
             <div class="form-section" id="sectionRegister">
                 <label>
                     Nom complet
-                    <input type="text" name="fullName" maxlength="120" placeholder="Votre nom">
+                    <input type="text" name="fullName" maxlength="120" placeholder="Votre nom" disabled>
                 </label>
                 <label>
                     Email
-                    <input type="email" name="emailRegister" placeholder="nom@email.com" autocomplete="email">
+                    <input type="email" name="emailRegister" placeholder="nom@email.com" autocomplete="email" disabled>
                 </label>
                 <label>
                     Mot de passe
-                    <input type="password" name="passwordRegister" placeholder="Min. 6 caractères" autocomplete="new-password">
+                    <input type="password" name="passwordRegister" placeholder="Min. 6 caractères" autocomplete="new-password" disabled>
                 </label>
             </div>
 
@@ -166,6 +166,8 @@ function switchTab(tab) {
     document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
     document.getElementById('sectionLogin').classList.toggle('active', tab === 'login');
     document.getElementById('sectionRegister').classList.toggle('active', tab === 'register');
+    document.querySelectorAll('#sectionLogin input').forEach(i => i.disabled = tab !== 'login');
+    document.querySelectorAll('#sectionRegister input').forEach(i => i.disabled = tab !== 'register');
     document.getElementById('submitBtn').textContent = tab === 'login' ? 'Se connecter' : "S'inscrire";
     hideError();
 }

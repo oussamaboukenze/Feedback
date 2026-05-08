@@ -44,6 +44,7 @@ public class SecurityConfig {
                     "/h2-console/**"
                 ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/applications/public").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/applications/*/components").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/feedbacks").permitAll()
                 .anyRequest().authenticated()
